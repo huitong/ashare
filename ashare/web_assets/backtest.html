@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A 股量化研究台 · 组合回测</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/backtest.js" defer></script>
+</head>
+<body>
+<header class="bar">
+  <div class="identity"><span class="logo" aria-hidden="true">A</span><span>A 股量化研究台</span></div>
+  <nav class="source" aria-label="研究台"><a class="top-link" href="/">行情库</a><a class="top-link" href="/training">训练</a><a class="top-link" href="/backtest" aria-current="page">回测</a><a class="top-link" href="/trade">交易参考</a></nav>
+</header>
+<main>
+  <section class="intro">
+    <div><h1>组合回测</h1><p id="basis">正在读取回测记录</p><a class="factor-jump" href="#period-panel">分期收益</a> · <a class="factor-jump" href="#factor-guide">因子说明</a></div>
+    <form class="filters" aria-label="回测设置">
+      <label>回测记录<select id="run" aria-describedby="basis"></select></label>
+      <label>查看方案<select id="variant"></select></label>
+    </form>
+  </section>
+  <p id="alert" role="status" hidden></p>
+  <div id="result" hidden>
+    <section class="metrics" aria-label="回测关键指标">
+      <article><h2>累计净收益</h2><strong id="return"></strong><small id="final"></small></article>
+      <article><h2>最大回撤</h2><strong id="drawdown"></strong><small id="annual"></small></article>
+      <article><h2>交易成本</h2><strong id="cost"></strong><small id="cost-detail"></small></article>
+      <article><h2>平均持仓</h2><strong id="positions"></strong><small id="orders"></small></article>
+    </section>
+    <section class="panel train-panel">
+      <div class="panel-head">
+        <div><h2>净值与回撤</h2><p id="chart-summary"></p></div>
+        <div class="bt-legend" id="chart-legend"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-label"><strong>累计收益</strong><span id="chart-hover"></span></div>
+        <canvas id="equity-chart" tabindex="0" aria-label="累计收益曲线，可用左右方向键查看每日数据"></canvas>
+        <div class="chart-label"><strong>回撤</strong></div>
+        <canvas id="drawdown-chart" class="bt-drawdown" tabindex="0" aria-label="回撤曲线，可用左右方向键查看每日数据"></canvas>
+      </div>
+    </section>
+    <section class="panel train-panel" id="benchmark-panel" hidden>
+      <div class="panel-head"><div><h2>同期基准</h2><p>超额为所选策略减去基准。日收益相关性衡量同日涨跌的同步程度。</p></div></div>
+      <div class="table-wrap" id="benchmarks"></div>
+    </section>
+    <section class="panel train-panel" id="period-panel">
+      <div class="panel-head"><div><h2>季度与年度收益</h2><p>以上期最后一个交易日收盘为基准，回测首期使用首日收盘。未结束的期间统计至表中所列日期。超额为策略净收益减指数收益。</p></div></div>
+      <div class="views" role="group" aria-label="收益统计周期">
+        <button id="period-year" type="button" aria-pressed="true">按年度</button>
+        <button id="period-quarter" type="button" aria-pressed="false">按季度</button>
+      </div>
+      <div class="table-wrap" id="period-returns"></div>
+    </section>
+    <section class="panel train-panel" id="low-vol-control-panel" hidden>
+      <div class="panel-head">
+        <div><h2>红利低波与增强模型对照</h2><p>各年独立从空仓开始。三组策略统一按开盘调仓，两日排名和大于 50 卖出，计交易费用，滑点为 0 bp。</p></div>
+      </div>
+      <div class="table-wrap" id="low-vol-controls"></div>
+      <p class="factor-note">估值版同时引入账面市值比、盈利收益率和股息率。表中收益差是三项特征一起加入后的结果。红利低波全收益含分红再投资，策略通过复权因子近似处理公司行动，未单独模拟股息税。</p>
+    </section>
+    <section class="panel train-panel">
+      <div class="panel-head"><div><h2>排序方法对照</h2><p id="comparison-basis"></p></div></div>
+      <div class="filters" id="grid-filters" hidden>
+        <label>原低波权重<select id="grid-weight"><option value="">全部</option><option value="0.35">35%</option><option value="0.5">50%</option><option value="0.65">65%</option><option value="1">100%</option></select></label>
+        <label>卖出条件<select id="grid-exit"><option value="">全部</option><option value="top20">跌出 Top 20</option><option value="top30">跌出 Top 30</option><option value="sum50">两日排名和 &gt; 50</option></select></label>
+      </div>
+      <div class="table-wrap" id="comparisons"></div>
+      <details>
+        <summary>回测参数与成交限制</summary>
+        <dl class="bt-assumptions" id="assumptions"></dl>
+      </details>
+    </section>
+    <section class="panel train-panel" id="enhanced-guide" hidden>
+      <div class="panel-head"><div><h2>低波增强模型</h2><p id="enhanced-split"></p></div></div>
+      <div class="table-wrap" id="enhanced-models"></div>
+      <p class="factor-note" id="enhanced-mix"></p>
+      <p class="factor-note">特征包括近 60 日波动、下行波动、回撤和多周期动能。5 日均线的日斜率以方向、平均值和标准差反映上涨是否平稳。估值版本加入账面市值比、正盈利收益率和股息率。</p>
+    </section>
+    <section class="panel train-panel" id="factor-guide" aria-labelledby="factor-guide-title">
+      <div class="panel-head">
+        <div>
+          <h2 id="factor-guide-title">因子说明</h2>
+          <p>单因子直接按一项打分。多因子先把每项分数转换为当日候选股中的百分位，再按方案权重相加。</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="factor-guide">
+          <thead><tr><th scope="col">因子</th><th scope="col">怎么算</th><th scope="col">谁排在前面</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">低波动</th><td>计算近 20 个交易日复权日收益率的标准差，至少需要 15 个有效日收益。</td><td>标准差更小、每天涨跌更平稳的股票。</td></tr>
+            <tr><th scope="row">趋势</th><td>近 5 日复权收益 × 35% ＋近 20 日复权收益 × 65%。</td><td>近期累计涨幅更强的股票。</td></tr>
+            <tr><th scope="row">MACD</th><td>用 12 日和 26 日指数均线的差计算 DIF，再减去 DIF 的 9 日指数均线，最后除以当日复权价。</td><td>归一化柱值更高的股票。</td></tr>
+            <tr><th scope="row">Transformer</th><td>用过去 24 个交易日的量价、市值和板块等特征打分。训练目标是次日开盘入场后，到再下一交易日开盘的相对收益。</td><td>模型给出更高排序分的股票。</td></tr>
+            <tr><th scope="row">成交量异动</th><td>当天成交量 ÷ 此前 20 个交易日成交量的中位数，历史窗口至少需要 15 个有效成交量。</td><td>相对自身历史成交量放大更多的股票。</td></tr>
+            <tr><th scope="row">5 日反转</th><td>取近 5 日复权收益率的相反数。</td><td>近 5 日收益更低的股票，检验短期回落后是否出现反弹。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="factor-note"><strong>低波动举例</strong> 两只股票近 20 天都涨了 2%，日收益标准差分别为 1% 和 3%。低波动因子会把 1% 的股票排在前面。</p>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>逐日与成交明细</h2><p id="ledger-caption"></p></div>
+        <div class="filters">
+          <label>数据表<select id="table"><option value="trades">成交记录</option><option value="blocked">未成交订单</option><option value="equity">逐日净值</option><option value="decisions">排名与信号</option><option value="events">持仓事件</option></select></label>
+          <a id="download" hidden>下载 CSV</a>
+        </div>
+      </div>
+      <div class="table-wrap" id="ledger"></div>
+      <div id="pager" class="pager"></div>
+    </section>
+  </div>
+</main>
+</body>
+</html>

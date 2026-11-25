@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A 股量化研究台 · 交易参考</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/trade.js"></script>
+</head>
+<body>
+<header class="bar">
+  <div class="identity"><span class="logo" aria-hidden="true">A</span><span>A 股量化研究台</span></div>
+  <nav class="source" aria-label="研究台"><a class="top-link" href="/">行情库</a><a class="top-link" href="/training">训练</a><a class="top-link" href="/backtest">回测</a><a class="top-link" href="/trade" aria-current="page">交易参考</a></nav>
+</header>
+<main class="trade-main">
+  <section class="intro">
+    <div><h1>交易参考</h1><p id="reference-day" aria-live="polite">正在读取收盘排名</p></div>
+    <div class="filters">
+      <label>评分策略<select id="strategy" disabled></select></label>
+      <button id="refresh-trade" type="button">刷新</button>
+    </div>
+  </section>
+  <p id="alert" role="status" hidden></p>
+  <section class="panel" id="trade-results" hidden>
+    <div class="panel-head">
+      <div><h2>得分前 30 的股票</h2><p id="pool"></p></div>
+      <a id="trade-source" href="https://github.com/xu-duqing/investment_data/releases">GitHub 数据发布</a>
+    </div>
+    <div class="table-wrap trade-table">
+      <table>
+        <thead><tr><th scope="col">排名</th><th scope="col">股票代码</th><th scope="col">股票名称</th>
+          <th scope="col">综合分</th><th scope="col">低波分</th><th scope="col" id="factor-head">增强分</th>
+          <th scope="col">收盘价（元）</th><th scope="col">当日涨跌幅</th><th scope="col">召回来源</th></tr></thead>
+        <tbody id="ranking"></tbody>
+      </table>
+    </div>
+    <p class="factor-note" id="scoring-note"></p>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A 股量化研究台 · 行情库</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<header class="bar">
+  <div class="identity"><span class="logo" aria-hidden="true">A</span><span>A 股量化研究台</span></div>
+  <div class="source"><a href="/backtest" class="top-link">回测</a><a href="/training" class="top-link">训练</a><a href="/trade" class="top-link">交易参考</a><label for="source">数据源</label><select id="source"></select><button id="refresh" type="button">刷新</button></div>
+</header>
+<main>
+  <section class="intro">
+    <div><h1>历史行情库</h1><p id="basis">正在读取本地数据库</p></div>
+    <span class="connection" id="coverage"></span>
+  </section>
+  <section class="metrics" aria-label="数据覆盖">
+    <article><h2>有报价证券</h2><strong id="m-symbols">—</strong><small id="m-exchanges"></small></article>
+    <article><h2>行情记录</h2><strong id="m-prices">—</strong><small id="m-rows"></small></article>
+    <article><h2>交易日</h2><strong id="m-days">—</strong><small id="m-range"></small></article>
+    <article><h2>市值覆盖率</h2><strong id="m-cap">—</strong><small>在有收盘价的记录中</small></article>
+  </section>
+  <nav class="views" aria-label="行情视图">
+    <button id="tab-market" type="button" aria-controls="market" aria-pressed="true">市场截面</button>
+    <button id="tab-stock" type="button" aria-controls="stock" aria-pressed="false">个股历史</button>
+    <button id="tab-quality" type="button" aria-controls="quality" aria-pressed="false">数据质量</button>
+  </nav>
+  <p id="alert" role="status" hidden></p>
+  <section id="market" class="panel">
+    <div class="panel-head">
+      <div><h2>市场截面</h2><p id="daily-caption"></p></div>
+      <form id="daily-form" class="filters">
+        <label>交易日<input id="day" type="date" required></label>
+        <label>排序<select id="sort"><option value="cap">总市值</option><option value="volume">成交量</option><option value="code">证券代码</option></select></label>
+        <button class="primary">查询</button>
+      </form>
+    </div>
+    <div class="table-wrap" id="daily-table"></div>
+    <div class="pager" id="daily-pager"></div>
+  </section>
+  <section id="stock" class="panel" hidden>
+    <div class="panel-head">
+      <div><h2 id="stock-heading">个股历史</h2><p id="stock-caption"></p></div>
+      <form id="stock-form" class="filters">
+        <label>证券代码<input id="ticker" placeholder="如 600519.SH" list="ticker-options" autocomplete="off" required></label>
+        <datalist id="ticker-options"></datalist>
+        <label>起始日<input id="start" type="date"></label><label>结束日<input id="end" type="date"></label>
+        <button class="primary">查询</button>
+      </form>
+    </div>
+    <div class="chart-wrap" id="chart-wrap" hidden>
+      <div class="chart-label"><strong>日 K 线与成交量</strong><span id="chart-date"></span></div>
+      <canvas id="chart" aria-label="所选证券的日 K 线与成交量"></canvas>
+    </div>
+    <details id="stock-membership" hidden><summary>指数成分历史</summary><div class="table-wrap" id="membership-table"></div></details>
+    <div class="table-title"><h3>历史明细</h3><a id="export" hidden>下载 CSV</a></div>
+    <div class="table-wrap" id="stock-table"></div>
+    <div class="pager" id="stock-pager"></div>
+  </section>
+  <section id="quality" class="panel" hidden>
+    <div class="panel-head"><div><h2>数据质量</h2><p id="quality-caption"></p></div></div>
+    <div class="quality-grid">
+      <div><h3>按年份覆盖</h3><div class="table-wrap" id="year-table"></div></div>
+      <div><h3>字段覆盖</h3><div class="table-wrap" id="field-table"></div></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

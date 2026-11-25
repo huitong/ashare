@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A 股量化研究台 · 模型训练</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/training.js" defer></script>
+</head>
+<body>
+<header class="bar">
+  <div class="identity"><span class="logo" aria-hidden="true">A</span><span>A 股量化研究台</span></div>
+  <div class="source"><a class="top-link" href="/">行情库</a><a class="top-link" href="/training" aria-current="page">训练</a><a class="top-link" href="/backtest">回测</a><a class="top-link" href="/trade">交易参考</a></div>
+</header>
+<main>
+  <section class="intro">
+    <div><h1>模型训练</h1><p id="run-message" role="status"></p></div>
+    <div class="filters"><label>训练运行<select id="run"></select></label><button id="refresh">刷新</button></div>
+  </section>
+  <section class="metrics" aria-label="运行概览">
+    <article><h2>训练状态</h2><strong id="state">—</strong><small id="runtime"></small></article>
+    <article><h2>词表规模</h2><strong id="vocabulary">—</strong><small id="tokens-seen"></small></article>
+    <article><h2>训练轮数</h2><strong id="epochs">—</strong><small id="configuration"></small></article>
+    <article><h2>最优验证 Rank IC</h2><strong id="best-ic">—</strong><small id="best-epoch"></small></article>
+  </section>
+  <section class="panel train-panel">
+    <div class="panel-head"><div><h2>训练曲线</h2><p>每轮训练总损失、验证收益分桶 NLL、横截面 Rank IC</p></div></div>
+    <div class="train-charts">
+      <figure><figcaption>训练总损失 ↓</figcaption><canvas id="loss-chart" aria-label="每轮训练总损失"></canvas></figure>
+      <figure><figcaption>收益分桶 NLL ↓</figcaption><canvas id="nll-chart" aria-label="每轮验证收益分桶负对数似然"></canvas></figure>
+      <figure><figcaption>验证 Rank IC ↑</figcaption><canvas id="ic-chart" aria-label="每轮验证集 Rank IC"></canvas></figure>
+    </div>
+    <div id="round-table" class="table-wrap"></div>
+  </section>
+  <section class="panel train-panel">
+    <div class="panel-head"><div><h2>模型对照</h2><p id="test-caption"></p></div><div class="filters"><label>结果集<select id="result-set"><option value="test">测试集</option><option value="validation">验证集</option></select></label></div></div>
+    <div id="score-table" class="table-wrap"></div>
+  </section>
+  <section class="panel train-panel">
+    <div class="panel-head"><div><h2>时间切分与数据覆盖</h2><p id="source-caption"></p></div></div>
+    <div class="quality-grid">
+      <div><div id="split-table" class="table-wrap"></div><div id="type-table" class="table-wrap spaced-table"></div></div>
+      <div id="coverage-table" class="table-wrap"></div>
+    </div>
+  </section>
+  <section class="panel train-panel">
+    <div class="panel-head"><div><h2>批次明细</h2><p id="batch-caption"></p></div><div class="filters"><label>批次轮数<select id="batch-epoch"></select></label></div></div>
+    <div id="step-table" class="table-wrap"></div>
+  </section>
+</main>
+</body>
+</html>

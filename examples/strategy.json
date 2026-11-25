@@ -1,0 +1,24 @@
+{
+  "weights": {
+    "trend": 0.35,
+    "macd": 0.25,
+    "token_transformer": 0.40
+  },
+  "industry_count": 4,
+  "industry_members": 25,
+  "industry_min_members": 5,
+  "volume_count": 80,
+  "volume_ratio": 1.8,
+  "min_amount": 10000000,
+  "news_days": 3,
+  "min_weight_coverage": 0.60,
+  "positions": 12,
+  "rebalance_every": 1,
+  "initial_cash": 1000000,
+  "commission_bps": 3,
+  "min_commission": 5,
+  "sell_tax_bps": 5,
+  "transfer_bps": 0.1,
+  "slippage_bps": 10,
+  "participation": 0.01
+}
